@@ -1,6 +1,7 @@
 package com.example.softgen.Service;
 
 import com.example.softgen.Model.Admin;
+import com.example.softgen.Model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,6 +24,17 @@ public class JwtService {
                 .setSubject(admin.getEmail())
                 .claim("Firstname", admin.getFirstname())
                 .claim("lastname", admin.getLastName())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+    public String generateToken(User user) {
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("firstname", user.getFirstName())
+                .claim("lastname", user.getLastName())
+                .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)

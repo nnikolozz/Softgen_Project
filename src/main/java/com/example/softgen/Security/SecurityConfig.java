@@ -40,8 +40,15 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/admin/auth/signup", "/api/v1/admin/auth/signin").permitAll()
+                        .requestMatchers(
+                                "/api/v1/auth/login",
+                                "/api/v1/auth/logout",
+                                "/api/v1/auth/activation"
+                        ).permitAll()
+
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/auth/**").hasRole("USER")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -49,3 +56,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
